@@ -16,7 +16,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/start-axum.css"/>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="Axum exchange"/>
 
         // content for this welcome page
         <Router fallback=|cx| {
@@ -36,7 +36,6 @@ pub fn App(cx: Scope) -> impl IntoView {
     }
 }
 
-/// Renders the home page of your application.
 #[component]
 fn HomePage(cx: Scope) -> impl IntoView {
     // Creates a reactive value to update the button
