@@ -3,7 +3,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 use crate::auth::*;
-
+use crate::components::navbar::NavBar;
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -11,7 +11,7 @@ pub fn App(cx: Scope) -> impl IntoView {
     let logout = create_server_action::<Logout>(cx);
     let signup = create_server_action::<Signup>(cx);
 
-    let user = create_resource(
+    let user: Resource<(usize, usize, usize), Result<Option<User>, ServerFnError>> = create_resource(
         cx,
         move || {
             (
@@ -23,47 +23,20 @@ pub fn App(cx: Scope) -> impl IntoView {
         move |_| get_user(cx),
     );
 
-    // Provides context that manages stylesheets, titles, meta tags, etc.
+    // Provide user resource to components
+    provide_context(cx, user);
+
     provide_meta_context(cx);
 
     view! {
         cx,
-        // injects a stylesheet into the document <head>
-        // id=leptos means cargo-leptos will hot-reload this stylesheet
-        <Stylesheet id="leptos" href="/pkg/start-axum.css"/>
-        // sets the document title
+        <Stylesheet id="leptos" href="/pkg/axum-exchange.css"/>
         <Title text="Axum exchange"/>
-        // content for this welcome page
-
         <Router fallback=|cx| {
             view! {cx, <h1>"Page not found :("</h1>}.into_view(cx)
         }>
-
-        <header>
-                <A href="/"><h1>"My Tasks"</h1></A>
-                <Transition
-                    fallback=move || view! {cx, <span>"Loading..."</span>}
-                >
-                {move || {
-                    user.read(cx).map(|user| match user {
-                        Err(e) => view! {cx,
-                            <A href="/signup">"Signup"</A>", "
-                            <A href="/login">"Login"</A>", "
-                            <span>{format!("Login error: {}", e)}</span>
-                        }.into_view(cx),
-                        Ok(None) => view! {cx,
-                            <A href="/signup">"Signup"</A>", "
-                            <A href="/login">"Login"</A>", "
-                            <span>"Logged out."</span>
-                        }.into_view(cx),
-                        Ok(Some(user)) => view! {cx,
-                            <A href="/settings">"Settings"</A>", "
-                            <span>{format!("Logged in as: {} ({})", user.username, user.id)}</span>
-                        }.into_view(cx)
-                    })
-                }}
-                </Transition>
-            </header>
+        
+            <NavBar />
 
             <main>
                 <Routes>
@@ -94,7 +67,8 @@ fn HomePage(cx: Scope) -> impl IntoView {
     let on_click = move |_| set_count.update(|count| *count += 1);
 
     view! { cx,
-        <h1>"Welcome to Leptos!"</h1>
+        <h1 class="color-effect" >"Testowa strona glowna"</h1>
+        <span class="color-effect">"Testowy smieszny kolorek"</span>
         <button on:click=on_click>"Click Me: " {count}</button>
     }
 }
@@ -160,7 +134,7 @@ pub fn Signup(
             </label>
 
             <br/>
-            <button type="submit" class="button">"Sign Up"</button>
+            <button type="submit">"Sign Up"</button>
         </ActionForm>
     }
 }
@@ -174,7 +148,7 @@ pub fn Logout(
         cx,
         <div id="loginbox">
             <ActionForm action=action>
-                <button type="submit" class="button">"Log Out"</button>
+                <button type="submit">"Log Out"</button>
             </ActionForm>
         </div>
     }

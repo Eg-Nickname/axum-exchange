@@ -1,4 +1,87 @@
+// Light color scheme
+	$text: #0d0502;
+	// $background: #fdf1ed;
+	$background: #ffffff;
+	$primary: #ea8c66;
+	$secondary: #f3bfaa;
+	$accent: #b84619;
+
+
+// Dark color scheme
+	// $text: #fafafa;
+	// $background: #050505;
+	// $primary: #ea8c66;
+	// $secondary: #84422a;
+	// $accent: #ed9978;
+
+
+// Neutralne
+	$gradient: linear-gradient(120deg, $primary, $accent);
+	$test: #f10000;
+
+// Fontsizes
+$h1: 48px;
+$h2: 32px;
+$subtitle: 24px;
+$p: 18px;
+$sub: 16px;
+$small: 14px;
+
 body {
-	font-family: sans-serif;
-	text-align: center;
+	background-color: $background;
+	margin: 0;
+	font-family: 'Inter', sans-serif;
+}
+a {
+	color: $text;
+	text-decoration: none;
+}
+
+.color-effect {
+	background: linear-gradient(120deg, #ea8c66, #b84619);
+	background-clip: text;
+	-webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+// Nav bar
+nav {
+	z-index: 100;
+	// background-color: $test;
+	padding: 10px 70px;
+	font-size: 22px;
+}
+
+nav ul {
+	list-style: none;
+	display: flex;
+	justify-content: space-between;
+}
+nav .nav-link{
+	border-bottom: 4px solid transparent;
+	padding: 8px;
+}
+nav .nav-link:hover{
+	border-bottom: 4px solid;
+	border-image-slice: 1;
+	border-width: 4px;
+	border-image-source: $gradient;
+	border-radius: 3px;
+	transition: 600ms all;
+}
+nav .login-link, nav .signup-link {
+	padding: 10px 12px;
+	border-radius: 6px;
+}
+nav .login-link:hover, nav .signup-link:hover {
+	opacity: 0.85;
+	transition: 300ms opacity;
+}
+nav .login-link {
+	margin-right: 20px;
+	background-color: $primary;
+}
+
+nav .signup-link {
+	background-color: $secondary;
 }
