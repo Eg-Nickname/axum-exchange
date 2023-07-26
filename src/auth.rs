@@ -236,7 +236,7 @@ pub async fn signup(
     Ok(())
 }
 
-#[server(Logout, "/api")]
+#[server(Logout, "/api", "Url", "logout")]
 pub async fn logout(cx: Scope) -> Result<(), ServerFnError> {
     let auth = auth(cx)?;
 
