@@ -7,6 +7,8 @@ use crate::components::navbar::NavBar;
 use crate::pages::homepage::HomePage;
 use crate::pages::login_page::LoginPage;
 use crate::pages::signup_page::SignupPage;
+use crate::pages::resources_listings_page::ResourcesListingsPage;
+use crate::pages::fallback_page::FallbackPage;
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -25,10 +27,9 @@ pub fn App(cx: Scope) -> impl IntoView {
         },
         move |_| get_user(cx),
     );
-    log::warn!("Logout url: {:?}", logout.url());
+    
     // Provide user resource to components
     provide_context(cx, user);
-
     provide_meta_context(cx);
 
     view! {
@@ -39,9 +40,9 @@ pub fn App(cx: Scope) -> impl IntoView {
             view! {cx, <h1>"Page not found :("</h1>}.into_view(cx)
         }>
         
-            <NavBar />
 
             <main>
+                <NavBar />
                 <Routes>
                     <Route path="" view=|cx| view! { cx, <HomePage/> }/>
                     <Route path="signup" view=move |cx| view! {
@@ -52,6 +53,13 @@ pub fn App(cx: Scope) -> impl IntoView {
                         cx,
                         <LoginPage action=login />
                     }/>
+                    // <Route path="resources/:page" view=|cx| view! { cx, <ResourcesListingsPage /> } />
+                    <Route path="/resources" view=|cx| view! { cx, <Outlet />}>
+                        <Route path="items/:page?" view=|cx| view! { cx, <ResourcesListingsPage /> } />
+                        <Route path="selloffers/:page?" view=|cx| view! { cx, <ResourcesListingsPage /> } />
+                        <Route path="offer/:offer_id" view=|cx| view! { cx, <ResourcesListingsPage /> } />
+                    </Route>
+
                 </Routes>
             </main>
         </Router>
