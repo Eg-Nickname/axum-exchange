@@ -3,7 +3,7 @@ use leptos_router::*;
 
 #[component]
 pub fn ResourcesListingsPage(cx: Scope) -> impl IntoView {
-    let query: Memo<ParamsMap> = use_query_map(cx);
+    // let query: Memo<ParamsMap> = use_query_map(cx);
     // let name = move || query().get("name").cloned().unwrap_or_default();
     // let number = move || query().get("number").cloned().unwrap_or_default();
     // let select = move || query().get("select").cloned().unwrap_or_default();
@@ -46,7 +46,7 @@ pub fn ResourcesFilter(cx: Scope) -> impl IntoView {
     let query = use_query_map(cx);
 
     let name = move || query().get("name").cloned().unwrap_or_default();
-    let number = move || query().get("groupby").cloned().unwrap_or_default();
+    let _number = move || query().get("groupby").cloned().unwrap_or_default();
     let select = move || query().get("sortorder").cloned().unwrap_or_default();
 
     view! {

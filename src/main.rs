@@ -12,6 +12,7 @@ if #[cfg(feature = "ssr")] {
     };
 
     use leptos::*;
+    use leptos_image::*;
     use leptos_axum::{generate_route_list, LeptosRoutes, handle_server_fns_with_context};
     use sqlx::{PgPool, postgres::{PgPoolOptions}};
     use axum_session::{SessionPgPool, SessionConfig, SessionLayer, SessionStore};
@@ -87,6 +88,7 @@ if #[cfg(feature = "ssr")] {
             .layer(AuthSessionLayer::<User, i64, SessionPgPool, PgPool>::new(Some(pool.clone()))
             .with_config(auth_config))
             .layer(SessionLayer::new(session_store))
+            .route("/cache/image", get(image_cache_handler))
             .with_state(app_state);
 
         
