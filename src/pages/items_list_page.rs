@@ -1,10 +1,9 @@
 use leptos::*;
 use leptos_router::*;
-use serde::{Deserialize, Serialize};
 use leptos_image::Image;
 
 use crate::server::items::get_items;
-
+use crate::server::items::ItemsQueryData;
 #[component]
 pub fn ItemsListPage(cx: Scope) -> impl IntoView {
     // let query: Memo<ParamsMap> = use_query_map(cx);
@@ -30,21 +29,38 @@ pub fn ItemsListPage(cx: Scope) -> impl IntoView {
     }
 }
 
-#[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
-pub struct ItemsQueryData{
-    pub page: u32,
-}
-
 #[component]
 pub fn ItemsList(cx: Scope) -> impl IntoView {
     let params = use_params_map(cx);
+    // Getting page number from url
     let page = move || params().get("page").cloned();
-    
     let parsed_page_num = move || { page().unwrap_or_default().parse::<u32>().unwrap_or_default() };
+
+    let query = use_query_map(cx);
+
+    // Name filter
+    let item_name = move || query().get("item_name").cloned().unwrap_or_default();
+    // Select display language
+    let language = move || query().get("language").cloned().unwrap_or_default();
+    // Select sorting by Name eng / Name Pl / Minecraft Id / Id 
+    let sort_by = move || query().get("sort_by").cloned().unwrap_or_default();
+    // Select sort order ASC / DESC
+    let sort_order = move || query().get("sort_order").cloned().unwrap_or_default();
+    // Color
+    let color = move || query().get("color").cloned().unwrap_or_default();
+    // Color distance
+    let color_distance = move || query().get("color_distance").cloned().unwrap_or_default();
+
 
     let query_data = create_memo(cx, move |_| {
         ItemsQueryData{
-            page: parsed_page_num()
+            page: parsed_page_num(),
+            item_name: item_name(),
+            language: language(),
+            sort_by: sort_by(),
+            sort_order: sort_order(),
+            color: color(),
+            color_distance: color_distance(),
         }
     });
 
@@ -79,7 +95,7 @@ pub fn ItemsList(cx: Scope) -> impl IntoView {
                                                 view! {
                                                     cx,
                                                     <li>
-                                                        {item.display_name_eng} ", Item Id:" {item.id}
+                                                        {item.display_name_eng} ", Item Id:" {item.id} ", Minecraft Id:" {item.minecraft_item_id}":"{item.item_meta}
                                                         {}
                                                         <Image
                                                             src={"/items_images/".to_string() + &item.filename}
@@ -117,30 +133,87 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
 
     let query = use_query_map(cx);
 
-    let name = move || query().get("name").cloned().unwrap_or_default();
-    let _number = move || query().get("groupby").cloned().unwrap_or_default();
-    let select = move || query().get("sortorder").cloned().unwrap_or_default();
+    // Name filter
+    let item_name = move || query().get("item_name").cloned().unwrap_or_default();
+    // Select display language
+    let language = move || query().get("language").cloned().unwrap_or_default();
+    // Select sorting by Name eng / Name Pl / Minecraft Id / Id 
+    let sort_by = move || query().get("sort_by").cloned().unwrap_or_default();
+    // Select sort order ASC / DESC
+    let sort_order = move || query().get("sort_order").cloned().unwrap_or_default();
+    // Color
     let color = move || query().get("color").cloned().unwrap_or_default();
-
-    log::info!("{}", color());
+    // Color distance
+    let color_distance = move || query().get("color_distance").cloned().unwrap_or_default();
 
     view! {
         cx,
         <h2>"Filter"</h2>
         <Form method="GET" action="">
+            // Name filter
+            <label for="item_name">"Wpisz nazwe przedmiotu by wyszukac:"</label>
+            <input type="text" name="item_name" value=item_name />
 
-            <input type="text" name="name" value=name />
-            <input type="color" name="color" value=color />
-            <select name="sortorder">
-                // `selected` will set which starts as selected
-                <option selected=move || select() == "A-Z">
-                    "A-Z"
+            // Select display language
+            <label for="language">"Wybierz język nazw przedmiotów:"</label>
+            {move || {
+                if language() == "pl" {
+                    view! {
+                        cx,
+                        <div><input type="radio" name="language" value="eng"  /> "Angielski"</div>
+                        <div><input type="radio" name="language" value="pl" checked /> "Polski"</div>
+                    }
+                }else{
+                    view! {
+                        cx,
+                        <div><input type="radio" name="language" value="eng" checked /> "Angielski"</div>
+                        <div><input type="radio" name="language" value="pl" /> "Polski"</div>
+                    }
+                }
+            }}
+
+            // Select sorting by Name eng / Name Pl / Minecraft Id / Id 
+            <label for="sort_by">"Wybierz sposób sortowania:"</label>
+            <select name="sort_by">
+                <option selected=move || sort_by() == "eng-name" value="eng-name">
+                    "Nazwa Przedmiotu Angielski"
                 </option>
-                <option selected=move || select() == "Z-A">
-                    "Z-A"
+                <option selected=move || sort_by() == "pl-name" value="pl-name">
+                    "Nazwa Przedmiotu Polski"
+                </option>
+                <option selected=move || sort_by() == "mc-id" value="mc-id">
+                    "Minecraft Id"
+                </option>
+                // <option selected=move || sort_by() == "color-distance" value="color-distance">
+                //     "Podobieństwo Koloru"
+                // </option>
+                <option selected=move || (sort_by() == "default") |  (sort_by() == "") value="default">
+                    "Domyślne"
                 </option>
             </select>
+
+            // Select sort order ASC / DESC
+            <label for="sort_by">"Wybierz kolejność sortowania:"</label>
+            <select name="sort_order">
+                <option selected=move || (sort_order() == "A-Z") |  (sort_order() == "") value="A-Z">
+                    "A-Z | Rosnąco"
+                </option>
+                <option selected=move || sort_order() == "Z-A" value="Z-A">
+                    "Z-A | Malejąco"
+                </option>
+            </select>
+
+            // Color
+            <label for="color">"Wybierz kolor przedmiotu:"</label>
+            <input type="color" name="color" value=color />
+
+            // Max color distance
+            <label for="color_distance">"Wybierz maksymalna odległość wybranego koloru do koloru przedmiotu:"</label>
+            <input type="range" name="color_distance" value=color_distance min="0" max="127" />
+
+            // Submit Reset
             <input type="submit" value="Filtruj"/>
+            <input type="reset" value="Resetuj"/>
         </Form>
     }
 }
@@ -148,7 +221,7 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
 #[component]
 pub fn PageButtons(cx: Scope) -> impl IntoView {
     let query = use_query_map(cx);
-    let query_str = move || query().to_query_string();
+    let query_str = move || query().to_query_string().replace("#", "%23");
 
     let params = use_params_map(cx);
     let page = move || params().get("page").cloned();

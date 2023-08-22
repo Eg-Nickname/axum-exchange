@@ -177,9 +177,16 @@ nav .account:hover .settings-dropdown ul li:hover{
 }
 
 
-
-
 // 
 .hidden-input{
 	display: none;
+}
+
+// Items filter
+.items-filter-wrapper{
+	width: 400px;
+}
+.items-filter-wrapper form{
+	display: flex;
+	flex-direction: column;
 }
