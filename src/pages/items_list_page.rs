@@ -2,16 +2,11 @@ use leptos::*;
 use leptos_router::*;
 use leptos_image::Image;
 
-// use crate::server::items::get_items;
+
 use crate::server::items::ItemsQueryData;
+use crate::components::page_buttons::PageButtons;
 #[component]
 pub fn ItemsListPage(cx: Scope) -> impl IntoView {
-    // let query: Memo<ParamsMap> = use_query_map(cx);
-    // let name = move || query().get("name").cloned().unwrap_or_default();
-    // let number = move || query().get("number").cloned().unwrap_or_default();
-    // let select = move || query().get("select").cloned().unwrap_or_default();
-
-
     view! {
         cx,
         <h2>"Items page"</h2>
@@ -24,8 +19,7 @@ pub fn ItemsListPage(cx: Scope) -> impl IntoView {
 
         
         <h2>"page change"</h2>
-        <PageButtons />
-
+        <PageButtons page_url="/resources/items/".to_string() />
     }
 }
 
@@ -231,45 +225,5 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
             <input type="submit" value="Filtruj"/>
             <input type="reset" value="Resetuj"/>
         </Form>
-    }
-}
-
-#[component]
-pub fn PageButtons(cx: Scope) -> impl IntoView {
-    let query = use_query_map(cx);
-    let query_str = move || query().to_query_string().replace("#", "%23");
-
-    let params = use_params_map(cx);
-    let page = move || params().get("page").cloned();
-
-    let parsed_page_num = move || { page().unwrap_or_default().parse::<u32>().unwrap_or_default() };
-
-    let page_prefix = move || {
-        match page() {
-            Some(_) => "../",
-            None => "./"
-        }
-    };
-
-    let prev_page_url = move || {
-        if parsed_page_num() > 0{
-            page_prefix().to_string() + &(parsed_page_num() - 1).to_string() + &query_str()
-        } else {
-            "".to_string() + &query_str()
-        }
-    };
-
-    let next_page_url = move || {
-        page_prefix().to_string() + &(parsed_page_num() + 1).to_string() + &query_str()
-    };
-
-    view! {
-        cx,
-
-        <div>
-            <A href={prev_page_url}>"<"</A>
-            <p>{parsed_page_num}</p>
-            <A href={next_page_url}>">"</A>
-        </div>
     }
 }
