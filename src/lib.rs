@@ -1,3 +1,5 @@
+#![feature(async_closure)]
+
 use cfg_if::cfg_if;
 pub mod app;
 pub mod auth;

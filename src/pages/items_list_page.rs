@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_router::*;
 use leptos_image::Image;
 
-use crate::server::items::get_items;
+// use crate::server::items::get_items;
 use crate::server::items::ItemsQueryData;
 #[component]
 pub fn ItemsListPage(cx: Scope) -> impl IntoView {
@@ -46,6 +46,8 @@ pub fn ItemsList(cx: Scope) -> impl IntoView {
     let sort_by = move || query().get("sort_by").cloned().unwrap_or_default();
     // Select sort order ASC / DESC
     let sort_order = move || query().get("sort_order").cloned().unwrap_or_default();
+    // Advanced color search
+    let color_search = move || query().get("use_color_search").cloned().is_some();
     // Color
     let color = move || query().get("color").cloned().unwrap_or_default();
     // Color distance
@@ -59,6 +61,7 @@ pub fn ItemsList(cx: Scope) -> impl IntoView {
             language: language(),
             sort_by: sort_by(),
             sort_order: sort_order(),
+            color_search: color_search(), 
             color: color(),
             color_distance: color_distance(),
         }
@@ -141,6 +144,8 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
     let sort_by = move || query().get("sort_by").cloned().unwrap_or_default();
     // Select sort order ASC / DESC
     let sort_order = move || query().get("sort_order").cloned().unwrap_or_default();
+    // Advanced color search
+    let color_search = move || query().get("use_color_search").cloned().is_some();
     // Color
     let color = move || query().get("color").cloned().unwrap_or_default();
     // Color distance
@@ -149,7 +154,7 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
     view! {
         cx,
         <h2>"Filter"</h2>
-        <Form method="GET" action="">
+        <Form method="GET" action="/resources/items">
             // Name filter
             <label for="item_name">"Wpisz nazwe przedmiotu by wyszukac:"</label>
             <input type="text" name="item_name" value=item_name />
@@ -184,6 +189,7 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
                 <option selected=move || sort_by() == "mc-id" value="mc-id">
                     "Minecraft Id"
                 </option>
+                // TODO Powinno być dostępny przy włączonym szukaniu kolorami
                 // <option selected=move || sort_by() == "color-distance" value="color-distance">
                 //     "Podobieństwo Koloru"
                 // </option>
@@ -203,6 +209,16 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
                 </option>
             </select>
 
+            // TODO Dodać styl przełącznika oraz pokazywać / chować inputy w zależności od zaznaczenia (do zrobienia w css)
+            // Use Color search
+            <label for="use_color_search">"Czy chcesz użyć filtrowania po kolorze?"</label>
+            {move || {
+                if color_search() {
+                    view! { cx, <input type="checkbox" name="use_color_search" checked /> }
+                }else{
+                    view! { cx, <input type="checkbox" name="use_color_search" /> }
+                }
+            }}
             // Color
             <label for="color">"Wybierz kolor przedmiotu:"</label>
             <input type="color" name="color" value=color />

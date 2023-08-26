@@ -9,22 +9,25 @@ pub struct ItemsQueryData{
     pub language: String,
     pub sort_by: String,
     pub sort_order: String,
+    pub color_search: bool,
     pub color: String,
     pub color_distance: String,
 }
 
 cfg_if! {
-    if #[cfg(feature = "ssr")] {
-        use crate::utils::pool;
-        use sqlx::{query_builder::QueryBuilder, Postgres, PgPool};
-
+if #[cfg(feature = "ssr")] {
+    use crate::utils::pool;
+    use sqlx::{query_builder::QueryBuilder, Postgres, PgPool};
+    
+    #[allow(dead_code)]
     struct ValidatedItemsQueryData {
         page: u32,
         item_name: String,
         language: String,
         sort_by: String,
         sort_order: String,
-        color: (u8, u8, u8),
+        color_search: bool,
+        color: (f64, f64, f64),
         color_distance: u32,
     }
 
@@ -40,19 +43,22 @@ cfg_if! {
             };
 
             let valid_sort_by = match self.sort_by.as_str(){
-                "eng-name" => "display_name_eng".to_string(),
-                "pl-name" => "display_name_pl".to_string(),
-                "mc-id" => "minecraft_item_id".to_string(),
+                "eng-name" => "items.display_name_eng".to_string(),
+                "pl-name" => "items.display_name_pl".to_string(),
+                "mc-id" => "items.minecraft_item_id".to_string(),
                 // "color-distance" => "color-distance".to_string(),
-                "default" | _ => "id".to_string(),
+                "default" | _ => "items.id".to_string(),
             }; 
 
             let valid_sort_order = match self.sort_order.as_str() {
                 "A-Z" => "ASC".to_string(),
                 "Z-A" | _ => "DESC".to_string()
             }; 
+            let valid_color_search = self.color_search;
 
-            let valid_color = (0,0,0);
+            use colors_transform::{Rgb, Color};
+            let parsed_color = Rgb::from_hex_str(self.color.as_str()).unwrap_or(Rgb::from(0.0, 0.0, 0.0));
+            let valid_color = (parsed_color.get_red() as f64, parsed_color.get_green() as f64, parsed_color.get_blue() as f64);
             let valid_color_distance = self.color_distance.parse::<u32>().unwrap_or_default(); 
 
             ValidatedItemsQueryData { 
@@ -60,40 +66,62 @@ cfg_if! {
                 item_name: valid_item_name, 
                 language: valid_language, 
                 sort_by: valid_sort_by, 
-                sort_order: valid_sort_order, 
+                sort_order: valid_sort_order,
+                color_search: valid_color_search,
                 color: valid_color, 
                 color_distance: valid_color_distance 
             }
         }
     }
-
+// SELECT items.id, items.display_name_eng, SUM(colors.color_index) 
+// FROM items INNER JOIN colors ON items.id = colors.item_id 
+// GROUP BY items.id
+// ORDER BY items.id
+// LIMIT 100
     impl ValidatedItemsQueryData{
-        // TODO: NAPRAWIĆ TO ŻE PRZY WYSZUKiWANIU KONKRETNEJ NAZWY ITEMU KOLEJNE STRONY PSUJĄ WYNIKI NP> PRZY SZUKANIU ITEMU RESETOWAĆ PAGE W URL DO 0
-        async fn query<'a>(self, pool: PgPool,  page_offset: i64) -> Result<Vec<Item>, ServerFnError> {
-            let mut query: QueryBuilder<Postgres> = QueryBuilder::new("SELECT * FROM items WHERE ");
+        async fn query<'a>(self, pool: PgPool) -> Result<Vec<Item>, ServerFnError> {
+            // let mut query: QueryBuilder<Postgres> = QueryBuilder::new("SELECT * FROM items WHERE ");
+            let mut query: QueryBuilder<Postgres> = QueryBuilder::new("");
 
-            query.push(" (LOWER(display_name_eng) LIKE ");
+
+            query.push("SELECT items.id, items.item_name, items.display_name_eng, items.display_name_pl, items.item_meta, items.minecraft_item_id, items.has_nbt, items.filename, COALESCE(SUM(colors.color_index),0) AS color_similiarity ");
+            query.push("FROM items INNER JOIN colors ON items.id = colors.item_id WHERE ");
+
+
+            query.push(" (LOWER(items.display_name_eng) LIKE ");
             query.push_bind(self.item_name.clone());
 
-            query.push(" OR LOWER(display_name_pl) LIKE ");
+            query.push(" OR LOWER(items.display_name_pl) LIKE ");
             query.push_bind(self.item_name);
             query.push(" ) ");
+
+            if self.color_search {
+                query.push(" AND colors.color <-> cube(array[");
+                query.push_bind(self.color.0);
+                query.push(",");
+                query.push_bind(self.color.1);
+                query.push(",");
+                query.push_bind(self.color.2);
+                query.push("]) < ");
+                query.push_bind(self.color_distance as f64);
+            }
+
+            query.push(" GROUP BY items.id ");
 
             query.push(" ORDER BY ");
             query.push(self.sort_by.clone());
             
-            if self.sort_by == "minecraft_item_id"{
+            if self.sort_by == "items.minecraft_item_id"{
                 query.push("::INT ");
             }
 
             query.push(" ");
             query.push(self.sort_order);
-
-
+            
             query.push(" LIMIT 100 OFFSET ");
-            query.push_bind(page_offset);
+            query.push_bind((self.page*100) as i64);
 
-            let mut items = Vec::new();
+            let mut items = Vec::with_capacity(100);
             let mut rows = query.build_query_as::<Item>().fetch(&pool);
 
             use futures::TryStreamExt;
@@ -117,14 +145,15 @@ pub struct Item {
     pub display_name_eng: String,
     pub display_name_pl: String,
     pub filename: String,
+    pub color_similiarity: i64
 }
 
 #[server(GetItems, "/api")]
 pub async fn get_items(cx: Scope, query_data: ItemsQueryData) -> Result<Vec<Item>, ServerFnError> {
     let pool = pool(cx)?;
 
-    let page_offset = (query_data.page * 100) as i64;
+    // let page_offset = (query_data.page * 100) as i64;
     let valid_query_data = query_data.validate();
 
-    valid_query_data.query(pool, page_offset).await
+    valid_query_data.query(pool).await
 }
