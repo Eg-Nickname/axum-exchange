@@ -46,6 +46,7 @@ if #[cfg(feature = "ssr")] {
                 "eng-name" => "items.display_name_eng".to_string(),
                 "pl-name" => "items.display_name_pl".to_string(),
                 "mc-id" => "items.minecraft_item_id".to_string(),
+                // TODO: Dodać wyświetlanie tej opcji przy filtrowaniu kolorami
                 // "color-distance" => "color-distance".to_string(),
                 "default" | _ => "items.id".to_string(),
             }; 
@@ -82,7 +83,6 @@ if #[cfg(feature = "ssr")] {
         async fn query<'a>(self, pool: PgPool) -> Result<Vec<Item>, ServerFnError> {
             // let mut query: QueryBuilder<Postgres> = QueryBuilder::new("SELECT * FROM items WHERE ");
             let mut query: QueryBuilder<Postgres> = QueryBuilder::new("");
-
 
             query.push("SELECT items.id, items.item_name, items.display_name_eng, items.display_name_pl, items.item_meta, items.minecraft_item_id, items.has_nbt, items.filename, COALESCE(SUM(colors.color_index),0) AS color_similiarity ");
             query.push("FROM items INNER JOIN colors ON items.id = colors.item_id WHERE ");

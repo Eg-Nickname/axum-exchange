@@ -9,17 +9,16 @@ use crate::components::page_buttons::PageButtons;
 pub fn ItemsListPage(cx: Scope) -> impl IntoView {
     view! {
         cx,
-        <h2>"Items page"</h2>
-        <div class="items-filter-wrapper">
-            <ItemsFilter />
-        </div>
-        <div class="items-list-wrapper">
-            <ItemsList />
-        </div>
+        <div class="resources-items-page">
+            <div class="items-filter-wrapper">
+                <ItemsFilter />
+            </div>
+            <div class="items-list-wrapper">
+                <ItemsList />
+            </div>
 
-        
-        <h2>"page change"</h2>
-        <PageButtons page_url="/resources/items/".to_string() />
+            <PageButtons page_url="/resources/items/".to_string() />
+        </div>
     }
 }
 
@@ -71,8 +70,6 @@ pub fn ItemsList(cx: Scope) -> impl IntoView {
 
     view! {
         cx,
-        <h2>"List of items"</h2>
-
         <Transition fallback=move || view! {cx, <p>"Loading..."</p> }>
             {move || {
                 let existing_items = {
@@ -92,16 +89,30 @@ pub fn ItemsList(cx: Scope) -> impl IntoView {
                                                 view! {
                                                     cx,
                                                     <li>
-                                                        {item.display_name_eng} ", Item Id:" {item.id} ", Minecraft Id:" {item.minecraft_item_id}":"{item.item_meta}
-                                                        {}
-                                                        <Image
-                                                            src={"/items_images/".to_string() + &item.filename}
-                                                            width=128
-                                                            height=128
-                                                            quality=85
-                                                            blur=false
-                                                            class="test-image"
-                                                        />
+                                                        <div class="item">
+                                                            <div class="bg"></div>
+                                                            <div class="image">
+                                                                <Image
+                                                                    src={"/items_images/".to_string() + &item.filename}
+                                                                    width=128
+                                                                    height=128
+                                                                    quality=85
+                                                                    blur=false
+                                                                    class="item-image"
+                                                                />
+                                                            </div>
+                                                            <div class="text">
+                                                                <h2>{item.display_name_eng}</h2>
+                                                                <h3>{item.display_name_pl}</h3>
+                                                                <p>
+                                                                    <a>"Minecraft Id:" {item.minecraft_item_id}":"{item.item_meta}</a>
+                                                                    <a>"Has NBT: " {item.has_nbt}</a>
+                                                                    <a>"Database Id:" {item.id}</a>
+                                                                    // TODO REMOVE IN PROD
+                                                                    <a>"Filename:" {item.filename}</a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </li>
                                                 }
                                             })
@@ -147,7 +158,6 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
 
     view! {
         cx,
-        <h2>"Filter"</h2>
         <Form method="GET" action="/resources/items">
             // Name filter
             <label for="item_name">"Wpisz nazwe przedmiotu by wyszukac:"</label>
