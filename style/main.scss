@@ -49,12 +49,18 @@ h1 {
 	color: $text;
 }
 h2 {
-	font-size: $subtitle;
+	font-size: $h2;
 	color: $text;
 	font-weight: 500;
 	opacity: 0.8;
-	width: 50%;
-	line-height: 130%;
+	// width: 50%;
+	// line-height: 130%;
+}
+
+h3{
+	font-size: $subtitle;
+	font-weight: 500;
+	opacity: 0.8;
 }
 .color-effect {
 	background: linear-gradient(120deg, #ea8c66, #b84619);
@@ -175,17 +181,106 @@ nav .account:hover .settings-dropdown ul li:hover{
 	border-bottom: 4px solid $accent;
 	cursor: pointer;
 }
+// PageButtons component
+.page_buttons_div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: $subtitle;
+}
+.page_buttons_div p{
+	margin: 0 20px;
+}
+.page_buttons_div a{
+	// padding: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 48px;
+	height: 48px;
+	background-color: $primary;
+	border-radius: 5px;
+}
+
+// resources/items/
+main .resources-items-page{
+	display: grid;
+	grid-template-columns: 350px 1fr;
+	row-gap: 30px;
+	column-gap: 30px;
+	margin-bottom: 30px;
+}
+.resources-items-page .items-filter-wrapper{
+	grid-column: 1;
+}
+.resources-items-page .items-list-wrapper{
+	grid-column: 2;
+}
+
+.resources-items-page .page_buttons_div{
+	grid-column: 1 / span 2;
+}
+.resources-items-page .items-list-wrapper ul{
+	list-style: none;
+}
+
+.resources-items-page .items-list-wrapper .item{
+	display: grid;
+	position: relative;
+	grid-template-columns: 197px 1fr;
+	border: solid 2px $accent;
+	border-radius: 10px;
+}
+
+.resources-items-page .items-list-wrapper .item .bg{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: $primary;
+	opacity: 0.1;
+	z-index: 0;
+	// transform: translate(0, -100%);
+	border-radius: 0 0 10px 10px;
+}
+.resources-items-page .items-list-wrapper .item .text{
+	z-index: 1;
+}
+.resources-items-page .items-list-wrapper .item .text h2{
+	margin-bottom: 10px;
+}
+.resources-items-page .items-list-wrapper .item .text h3{
+	font-size: 20px;
+	margin-top: 10px;
+}
+.resources-items-page .items-list-wrapper .item .text p{
+	display: flex;
+	justify-content: space-around;
+}
+
+.resources-items-page .items-list-wrapper .item .image{
+	border-radius: 10px;
+	margin: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1;
+}
+.resources-items-page .items-list-wrapper li{
+	margin-bottom: 20px;
+}
+// .resources-items-page .items-filter-wrapper
 
 
-// 
+
+
+
+
+
+
 .hidden-input{
 	display: none;
 }
 
-// Items filter
-.items-filter-wrapper{
-	width: 400px;
-}
 .items-filter-wrapper form{
 	display: flex;
 	flex-direction: column;
