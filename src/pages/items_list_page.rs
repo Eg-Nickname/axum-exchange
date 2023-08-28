@@ -165,25 +165,25 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
         <Form method="GET" action="/resources/items">
 
             // Name filter
-            <label for="item_name">"Wyszukaj po nazwie:"</label>
+            <label for="item_name">"Wyszukaj po nazwie"</label>
             <input type="text" name="item_name" value=item_name />
 
             <div class="spacer"></div>
             
             // Select display language
-            <label for="language">"Język nazw przedmiotów:"</label>
+            <label class="lang-label" for="language">"Język nazw przedmiotów"</label>
             {move || {
                 if language() == "pl" {
                     view! {
                         cx,
-                        <div><input type="radio" name="language" value="eng"  /> "Angielski"</div>
-                        <div><input type="radio" name="language" value="pl" checked /> "Polski"</div>
+                        <label class="radio-container"><input type="radio" name="language" value="eng"  /> "Angielski" <span class="checkmark"></span></label>
+                        <label class="radio-container"><input type="radio" name="language" value="pl" checked /> "Polski"<span class="checkmark"></span></label>
                     }
                 }else{
                     view! {
                         cx,
-                        <div><input type="radio" name="language" value="eng" checked /> "Angielski"</div>
-                        <div><input type="radio" name="language" value="pl" /> "Polski"</div>
+                        <label class="radio-container"><input type="radio" name="language" value="eng" checked /> "Angielski" <span class="checkmark"></span></label>
+                        <label class="radio-container"><input type="radio" name="language" value="pl" /> "Polski"<span class="checkmark"></span></label>
                     }
                 }
             }}
@@ -191,7 +191,7 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
             <div class="spacer"></div>
 
             // Select sorting by Name eng / Name Pl / Minecraft Id / Id 
-            <label for="sort_by">"Sposób sortowania:"</label>
+            <label for="sort_by">"Sposób sortowania"</label>
             <select name="sort_by">
                 <option selected=move || sort_by() == "eng-name" value="eng-name">
                     "Nazwa Przedmiotu Angielski"
@@ -202,10 +202,20 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
                 <option selected=move || sort_by() == "mc-id" value="mc-id">
                     "Minecraft Id"
                 </option>
-                // TODO Powinno być dostępny przy włączonym szukaniu kolorami
-                // <option selected=move || sort_by() == "color-distance" value="color-distance">
-                //     "Podobieństwo Koloru"
-                // </option>
+                {move || {
+                    if color_search() {
+                        view! { cx,
+                        <option selected=move || sort_by() == "color-distance" value="color-distance">
+                            "Podobieństwo Koloru"
+                        </option>
+                    }}else{
+                        view! { cx, 
+                        <option disabled selected=move || sort_by() == "color-distance" value="color-distance">
+                            "Podobieństwo Koloru"
+                        </option>
+                        }
+                    }
+                }}
                 <option selected=move || (sort_by() == "default") |  (sort_by() == "") value="default">
                     "Domyślne"
                 </option>

@@ -297,23 +297,51 @@ main .resources-items-page{
 	opacity: 0.2;
 	margin: 16px 0 16px 0;
 }
-.resources-items-page .items-filter-wrapper form .item-color-box, .resources-items-page .items-filter-wrapper form .color-search-box{
+.resources-items-page .items-filter-wrapper form .item-color-box, .resources-items-page .items-filter-wrapper form .color-search-box, .resources-items-page .items-filter-wrapper form .submit-reset{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
+.resources-items-page .items-filter-wrapper form input[type=text]{
+	padding: 10px;
+	border-radius: 10px;
+	border: 3px solid $secondary;
+	margin-top: 10px;
+	outline: none;
+}
+.resources-items-page .items-filter-wrapper form input[type=text]:focus{
+	border: 3px solid $primary;
+}
+.resources-items-page .items-filter-wrapper form .lang-label{
+	margin-bottom: 10px;
+}
+
+
 .resources-items-page .items-filter-wrapper form input {
 	accent-color: $primary;
 }
 .resources-items-page .items-filter-wrapper form input[type=range] {
 	width: 100%;
 }
-
-// .resources-items-page .items-filter-wrapper form .color-inputs-box{
-// 	transition: height 2s;
-// }
 .resources-items-page .items-filter-wrapper form .color-inputs-box.hide{
 	display: none;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input{
+	padding: 10px 20px;
+	font-size: $sub;
+	border: transparent;
+	font-weight: 500;
+	border-radius: 10px;
+	margin: 0 30px;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input:hover{
+	opacity: 0.8;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input[type=submit]{
+	background-color: $primary;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input[type=reset]{
+	background-color: $secondary;
 }
 
 // TOGGLE CHECKBOX
@@ -375,3 +403,57 @@ main .resources-items-page{
 .slider.round:before {
 	border-radius: 50%;
 }
+
+// CUSTOM RADIO BUTTONS
+.radio-container {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.radio-container input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.radio-container .checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 16px;
+	width: 16px;
+	background-color: #eee;
+	border: 2px solid $secondary;
+
+	border-radius: 50%;
+}
+
+.radio-container input:checked ~ .checkmark {
+	border: 2px solid $secondary;
+}
+.checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+.radio-container input:checked ~ .checkmark:after {
+	display: block;
+}
+
+.radio-container .checkmark:after {
+	top: 4px;
+	left: 4px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: $primary;
+}
+
+// TODO ADD CUSTOM SELECT INPUT
