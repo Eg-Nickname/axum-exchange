@@ -152,19 +152,26 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
     // Advanced color search
     let color_search = move || query().get("use_color_search").cloned().is_some();
     // Color
-    let color = move || query().get("color").cloned().unwrap_or_default();
+    let color = move || query().get("color").cloned().unwrap_or("#000000".to_string());
     // Color distance
     let color_distance = move || query().get("color_distance").cloned().unwrap_or_default();
 
+    // Rendering
+    let (color_search, set_color_search) = create_signal(cx, color_search());
+
     view! {
         cx,
+        // {move || color_search()}
         <Form method="GET" action="/resources/items">
+
             // Name filter
-            <label for="item_name">"Wpisz nazwe przedmiotu by wyszukac:"</label>
+            <label for="item_name">"Wyszukaj po nazwie:"</label>
             <input type="text" name="item_name" value=item_name />
 
+            <div class="spacer"></div>
+            
             // Select display language
-            <label for="language">"Wybierz język nazw przedmiotów:"</label>
+            <label for="language">"Język nazw przedmiotów:"</label>
             {move || {
                 if language() == "pl" {
                     view! {
@@ -181,8 +188,10 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
                 }
             }}
 
+            <div class="spacer"></div>
+
             // Select sorting by Name eng / Name Pl / Minecraft Id / Id 
-            <label for="sort_by">"Wybierz sposób sortowania:"</label>
+            <label for="sort_by">"Sposób sortowania:"</label>
             <select name="sort_by">
                 <option selected=move || sort_by() == "eng-name" value="eng-name">
                     "Nazwa Przedmiotu Angielski"
@@ -202,8 +211,10 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
                 </option>
             </select>
 
+            <div class="spacer"></div>
+
             // Select sort order ASC / DESC
-            <label for="sort_by">"Wybierz kolejność sortowania:"</label>
+            <label for="sort_by">"Kolejność sortowania"</label>
             <select name="sort_order">
                 <option selected=move || (sort_order() == "A-Z") |  (sort_order() == "") value="A-Z">
                     "A-Z | Rosnąco"
@@ -213,27 +224,51 @@ pub fn ItemsFilter(cx: Scope) -> impl IntoView {
                 </option>
             </select>
 
-            // TODO Dodać styl przełącznika oraz pokazywać / chować inputy w zależności od zaznaczenia (do zrobienia w css)
+            <div class="spacer"></div>
+
             // Use Color search
-            <label for="use_color_search">"Czy chcesz użyć filtrowania po kolorze?"</label>
-            {move || {
-                if color_search() {
-                    view! { cx, <input type="checkbox" name="use_color_search" checked /> }
-                }else{
-                    view! { cx, <input type="checkbox" name="use_color_search" /> }
-                }
-            }}
-            // Color
-            <label for="color">"Wybierz kolor przedmiotu:"</label>
-            <input type="color" name="color" value=color />
+            <div class="color-search-box">
+                <label for="use_color_search">"Filtrowania po kolorze"</label>
+                <label class="switch">
+                    {move || {
+                        if color_search() {
+                            view! { cx, <input class="color-search-checkbox" type="checkbox" name="use_color_search" checked on:click=move |_| { set_color_search.update(|n| *n = !*n ); } /> }
+                        }else{
+                            view! { cx, <input class="color-search-checkbox" type="checkbox" name="use_color_search" on:click=move |_| { set_color_search.update(|n| *n = !*n ); } /> }
+                        }
+                    }}
+                    <span class="slider round"></span>
+                </label>
+            </div>
 
-            // Max color distance
-            <label for="color_distance">"Wybierz maksymalna odległość wybranego koloru do koloru przedmiotu:"</label>
-            <input type="range" name="color_distance" value=color_distance min="0" max="127" />
+            <div class="spacer"></div>
 
+            <div class=
+            {move || 
+                if color_search(){
+                    "color-inputs-box show"}
+                else{
+                    "color-inputs-box hide"
+            }}>
+                // Color
+                <div class="item-color-box">
+                    <label for="color">"Kolor przedmiotu"</label>
+                    <input type="color" name="color" value=color />
+                </div>
+
+                <div class="spacer"></div>
+
+                // Max color distance
+                <label for="color_distance">"Maksymalna odległość wybranego koloru do koloru przedmiotu"</label>
+                <input class="form_slider" type="range" name="color_distance" value=color_distance min="0" max="127" />
+
+                <div class="spacer"></div>
+            </div>    
             // Submit Reset
-            <input type="submit" value="Filtruj"/>
-            <input type="reset" value="Resetuj"/>
+            <div class="submit-reset">
+                <input type="submit" value="Filtruj"/>
+                <input type="reset" value="Resetuj"/>
+            </div>
         </Form>
     }
 }
