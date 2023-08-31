@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS item_offers (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     packets BIGINT NOT NULL,
-    itemps_per_packet BIGINT NOT NULL,
+    items_per_packet BIGINT NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
