@@ -1,0 +1,28 @@
+// CUSTOM LINK BUTTON
+.link-button-primary{
+	padding: 10px 12px;
+	border-radius: 6px;
+	background-color: $primary;
+	transition: all 300ms;
+}
+.link-button-primary:hover{
+	opacity: 0.8;
+}
+
+.link-button-secondary{
+	padding: 10px 12px;
+	border-radius: 6px;
+	background-color: $secondary;
+	transition: all 300ms;
+}
+.link-button-secondary:hover{
+	opacity: 0.8;
+}
+
+// Text gradient
+.color-effect {
+	background: linear-gradient(120deg, #ea8c66, #b84619);
+	background-clip: text;
+	-webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

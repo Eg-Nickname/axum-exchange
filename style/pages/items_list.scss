@@ -1,0 +1,141 @@
+// resources/items/
+main .resources-items-page{
+	display: grid;
+	grid-template-columns: 350px 1fr;
+	row-gap: 30px;
+	column-gap: 30px;
+	margin-bottom: 30px;
+}
+.resources-items-page .items-filter-wrapper{
+	grid-column: 1;
+}
+.resources-items-page .items-list-wrapper{
+	grid-column: 2;
+}
+
+.resources-items-page .page-buttons-div{
+	grid-column: 1 / span 2;
+}
+.resources-items-page .items-list-wrapper ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.resources-items-page .items-list-wrapper .item{
+	display: grid;
+	position: relative;
+	grid-template-columns: 197px 1fr;
+	border-radius: 10px;
+}
+.resources-items-page .items-list-wrapper .item .bg{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	-webkit-box-shadow: 0px 6px 55px -19px rgba(0,0,0,0.47);
+	-moz-box-shadow: 0px 6px 55px -19px rgba(0,0,0,0.47);
+	box-shadow: 0px 6px 55px -19px rgba(0,0,0,0.47);
+	border-radius: 12px;
+}
+.resources-items-page .items-list-wrapper .item .text{
+	z-index: 1;
+}
+.resources-items-page .items-list-wrapper .item .text h2{
+	margin-bottom: 10px;
+}
+.resources-items-page .items-list-wrapper .item .text h3{
+	font-size: 20px;
+	margin-top: 10px;
+}
+.resources-items-page .items-list-wrapper .item .text p{
+	display: flex;
+	justify-content: space-around;
+}
+
+.resources-items-page .items-list-wrapper .item .image{
+	border-radius: 10px;
+	margin: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1;
+}
+.resources-items-page .items-list-wrapper li{
+	margin-bottom: 20px;
+}
+.resources-items-page .items-filter-wrapper{
+	position: relative;
+}
+// Resources filter
+.resources-items-page .items-filter-wrapper form {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	width: calc(100% - 2 * 26px);
+	padding: 26px;
+	z-index: 0;
+	-webkit-box-shadow: 0px 6px 55px -19px rgba(0,0,0,0.47);
+	-moz-box-shadow: 0px 6px 55px -19px rgba(0,0,0,0.47);
+	box-shadow: 0px 6px 55px -19px rgba(0,0,0,0.47);
+	border-radius: 12px;
+}
+
+.resources-items-page .items-filter-wrapper form label {
+	font-size: $p;
+	// margin: 8px 0;
+}
+
+.resources-items-page .items-filter-wrapper form .spacer {
+	width: 100%;
+	height: 2px;
+	background-color: $text;
+	border-radius: 2px;
+	opacity: 0.2;
+	margin: 16px 0 16px 0;
+}
+.resources-items-page .items-filter-wrapper form .item-color-box, .resources-items-page .items-filter-wrapper form .color-search-box, .resources-items-page .items-filter-wrapper form .submit-reset{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.resources-items-page .items-filter-wrapper form input[type=text]{
+	padding: 10px;
+	border-radius: 10px;
+	border: 3px solid $secondary;
+	margin-top: 10px;
+	outline: none;
+}
+.resources-items-page .items-filter-wrapper form input[type=text]:focus{
+	border: 3px solid $primary;
+}
+.resources-items-page .items-filter-wrapper form .lang-label{
+	margin-bottom: 10px;
+}
+
+
+.resources-items-page .items-filter-wrapper form input {
+	accent-color: $primary;
+}
+.resources-items-page .items-filter-wrapper form input[type=range] {
+	width: 100%;
+}
+.resources-items-page .items-filter-wrapper form .color-inputs-box.hide{
+	display: none;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input{
+	padding: 10px 20px;
+	font-size: $sub;
+	border: transparent;
+	font-weight: 500;
+	border-radius: 10px;
+	margin: 0 30px;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input:hover{
+	opacity: 0.8;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input[type=submit]{
+	background-color: $primary;
+}
+.resources-items-page .items-filter-wrapper form .submit-reset input[type=reset]{
+	background-color: $secondary;
+}
