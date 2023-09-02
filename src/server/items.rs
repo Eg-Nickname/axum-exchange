@@ -80,7 +80,7 @@ if #[cfg(feature = "ssr")] {
 // ORDER BY items.id
 // LIMIT 100
     impl ValidatedItemsQueryData{
-        async fn query<'a>(self, pool: PgPool) -> Result<Vec<Item>, ServerFnError> {
+        async fn query(self, pool: PgPool) -> Result<Vec<Item>, ServerFnError> {
             // let mut query: QueryBuilder<Postgres> = QueryBuilder::new("SELECT * FROM items WHERE ");
             let mut query: QueryBuilder<Postgres> = QueryBuilder::new("");
 

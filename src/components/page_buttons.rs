@@ -40,7 +40,7 @@ pub fn PageButtons(
     view! {
         cx,
 
-        <div class="page_buttons_div">
+        <div class="page-buttons-div">
             <A href={prev_page_url}>"<"</A>
             <p>{parsed_page_num}</p>
             <A href={next_page_url}>">"</A>

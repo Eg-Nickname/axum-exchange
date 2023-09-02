@@ -10,6 +10,7 @@ use crate::pages::login_page::LoginPage;
 use crate::pages::signup_page::SignupPage;
 use crate::pages::resources_listings_page::ResourcesListingsPage;
 use crate::pages::items_list_page::ItemsListPage;
+use crate::pages::item_offers_page::ItemOffersPage;
 // use crate::pages::fallback_page::FallbackPage;
 
 #[component]
@@ -59,7 +60,7 @@ pub fn App(cx: Scope) -> impl IntoView {
                     // <Route path="resources/:page" view=|cx| view! { cx, <ResourcesListingsPage /> } />
                     <Route path="/resources" view=|cx| view! { cx, <Outlet />}>
                         <Route path="items/:page?" view=|cx| view! { cx, <ItemsListPage /> } />
-                        <Route path="selloffers/:page?" view=|cx| view! { cx, <ResourcesListingsPage /> } />
+                        <Route path="offers/:item_id/:page?" view=|cx| view! { cx, <ItemOffersPage /> } />
                         <Route path="offer/:offer_id" view=|cx| view! { cx, <ResourcesListingsPage /> } />
                     </Route>
 

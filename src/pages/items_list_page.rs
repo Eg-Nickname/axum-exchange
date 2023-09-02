@@ -108,8 +108,7 @@ pub fn ItemsList(cx: Scope) -> impl IntoView {
                                                                     <a>"Minecraft Id:" {item.minecraft_item_id}":"{item.item_meta}</a>
                                                                     <a>"Has NBT: " {item.has_nbt}</a>
                                                                     <a>"Database Id:" {item.id}</a>
-                                                                    // TODO REMOVE IN PROD
-                                                                    <a>"Filename:" {item.filename}</a>
+                                                                    <A class="link-button-secondary" href={"/resources/offers/".to_string() + &item.id.to_string()}>"Zobacz oferty"</A>
                                                                 </p>
                                                             </div>
                                                         </div>
