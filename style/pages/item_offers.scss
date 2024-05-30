@@ -1,11 +1,11 @@
 // resources/offers/
-main .resources-items-item-offers-page{
+main .resources-item-offers-page{
 	display: grid;
 	grid-template-columns: 350px 1fr;
 	row-gap: 30px;
 	column-gap: 30px;
 	margin-bottom: 30px;
 }
-.resources-items-item-offers-page .offers-wrapper, .resources-items-item-offers-page .page-buttons-div{
+.resources-item-offers-page .offers-wrapper, .resources-item-offers-page .page-buttons-div{
 	grid-column: 1 / span 2;
 }

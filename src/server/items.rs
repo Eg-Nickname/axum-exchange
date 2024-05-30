@@ -52,8 +52,8 @@ if #[cfg(feature = "ssr")] {
             }; 
 
             let valid_sort_order = match self.sort_order.as_str() {
-                "A-Z" => "ASC".to_string(),
-                "Z-A" | _ => "DESC".to_string()
+                "Z-A" => "DESC".to_string()
+                "A-Z" | _ => "ASC".to_string(),
             }; 
             let valid_color_search = self.color_search;
 
