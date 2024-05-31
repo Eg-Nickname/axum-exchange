@@ -14,13 +14,12 @@ use crate::pages::item_offers_page::ItemOffersPage;
 // use crate::pages::fallback_page::FallbackPage;
 
 #[component]
-pub fn App(cx: Scope) -> impl IntoView {
-    let login = create_server_action::<Login>(cx);
-    let logout = create_server_action::<Logout>(cx);
-    let signup = create_server_action::<Signup>(cx);
+pub fn App() -> impl IntoView {
+    let login = create_server_action::<Login>();
+    let logout = create_server_action::<Logout>();
+    let signup = create_server_action::<Signup>();
 
     let user: Resource<(usize, usize, usize), Result<Option<User>, ServerFnError>> = create_resource(
-        cx,
         move || {
             (
                 login.version().get(),
@@ -28,40 +27,37 @@ pub fn App(cx: Scope) -> impl IntoView {
                 logout.version().get(),
             )
         },
-        move |_| get_user(cx),
+        move |_| get_user(),
     );
     
     // Provide user resource to components
-    provide_context(cx, user);
-    provide_image_context(cx);
-    provide_meta_context(cx);
+    provide_context(user);
+    provide_image_context();
+    provide_meta_context();
 
     view! {
-        cx,
         <Stylesheet id="leptos" href="/pkg/axum-exchange.css"/>
         <Title text="Axum exchange"/>
-        <Router fallback=|cx| {
-            view! {cx, <h1>"Page not found :("</h1>}.into_view(cx)
+        <Router fallback=|| {
+            view! { <h1>"Page not found :("</h1>}.into_view()
         }>
         
 
             <main>
                 <NavBar />
                 <Routes>
-                    <Route path="" view=|cx| view! { cx, <HomePage/> }/>
-                    <Route path="signup" view=move |cx| view! {
-                        cx,
+                    <Route path="" view=|| view! { <HomePage/> }/>
+                    <Route path="signup" view=move || view! {
                         <SignupPage action=signup/>
                     }/>
-                    <Route path="login" view=move |cx| view! {
-                        cx,
+                    <Route path="login" view=move || view! {
                         <LoginPage action=login />
                     }/>
-                    // <Route path="resources/:page" view=|cx| view! { cx, <ResourcesListingsPage /> } />
-                    <Route path="/resources" view=|cx| view! { cx, <Outlet />}>
-                        <Route path="items/:page?" view=|cx| view! { cx, <ItemsListPage /> } />
-                        <Route path="offers/:item_id/:page?" view=|cx| view! { cx, <ItemOffersPage /> } />
-                        <Route path="offer/:offer_id" view=|cx| view! { cx, <ResourcesListingsPage /> } />
+                    // <Route path="resources/:page" view=|cx| view! { <ResourcesListingsPage /> } />
+                    <Route path="/resources" view=|| view! { <Outlet />}>
+                        <Route path="items/:page?" view=|| view! { <ItemsListPage /> } />
+                        <Route path="offers/:item_id/:page?" view=|| view! { <ItemOffersPage /> } />
+                        <Route path="offer/:offer_id" view=|| view! { <ResourcesListingsPage /> } />
                     </Route>
 
                 </Routes>

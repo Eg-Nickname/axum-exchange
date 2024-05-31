@@ -4,12 +4,10 @@ use crate::auth::Login;
 
 #[component]
 pub fn LoginPage(
-    cx: Scope,
     action: Action<Login, Result<(), ServerFnError>>,
 ) -> impl IntoView {
 
     view! {
-        cx,
         <ActionForm action=action>
             <h1>"Log In"</h1>
             <label>

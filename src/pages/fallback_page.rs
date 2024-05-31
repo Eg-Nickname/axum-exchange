@@ -2,9 +2,8 @@ use leptos::*;
 
 
 #[component]
-pub fn FallbackPage(cx: Scope) -> impl IntoView {
+pub fn FallbackPage() -> impl IntoView {
     view! {
-        cx,
         <p>"Page Not Found"</p>
     }
 }

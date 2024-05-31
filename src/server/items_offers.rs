@@ -135,8 +135,8 @@ cfg_if! {
 
 
 #[server(GetItemOffers, "/api")]
-pub async fn get_item_offers(cx: Scope, query_data: ItemOffersQueryData) -> Result<Vec<SimpleItemOffer>, ServerFnError> {
-    let pool = pool(cx)?;
+pub async fn get_item_offers(query_data: ItemOffersQueryData) -> Result<Vec<SimpleItemOffer>, ServerFnError> {
+    let pool = pool()?;
     let valid_query_data = query_data.validate();
 
     valid_query_data.query(pool).await

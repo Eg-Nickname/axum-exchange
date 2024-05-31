@@ -4,8 +4,8 @@ use leptos_router::*;
 
 use crate::components::page_buttons::PageButtons;
 #[component]
-pub fn ItemOffersPage(cx: Scope) -> impl IntoView {
-    let params = use_params_map(cx);
+pub fn ItemOffersPage() -> impl IntoView {
+    let params = use_params_map();
     // Getting item id from url
     let item_id = move || params().get("item_id").cloned().unwrap_or("1".to_string()); 
     // Getting page number from url
@@ -13,7 +13,6 @@ pub fn ItemOffersPage(cx: Scope) -> impl IntoView {
     let parsed_page_num = move || { page().unwrap_or_default().parse::<u32>().unwrap_or_default() };
 
     view! {
-        cx,
         <div class="resources-item-offers-page">
             <div class="item-offers-filter-wrapper">
                 <ItemOffersFilter />
@@ -32,9 +31,9 @@ pub fn ItemOffersPage(cx: Scope) -> impl IntoView {
 }
 
 #[component]
-pub fn ItemOffersFilter(cx: Scope) -> impl IntoView {
+pub fn ItemOffersFilter() -> impl IntoView {
 
-    let query = use_query_map(cx);
+    let query = use_query_map();
 
     // Name filter
     let item_name = move || query().get("item_name").cloned().unwrap_or_default();
@@ -52,10 +51,9 @@ pub fn ItemOffersFilter(cx: Scope) -> impl IntoView {
     let color_distance = move || query().get("color_distance").cloned().unwrap_or_default();
 
     // Rendering
-    let (color_search, set_color_search) = create_signal(cx, color_search());
+    let (color_search, set_color_search) = create_signal(color_search());
 
     view! {
-        cx,
         // {move || color_search()}
         <Form method="GET" action="/resources/items">
 
@@ -70,13 +68,11 @@ pub fn ItemOffersFilter(cx: Scope) -> impl IntoView {
             {move || {
                 if language() == "pl" {
                     view! {
-                        cx,
                         <label class="radio-container"><input type="radio" name="language" value="eng"  /> "Angielski" <span class="checkmark"></span></label>
                         <label class="radio-container"><input type="radio" name="language" value="pl" checked /> "Polski"<span class="checkmark"></span></label>
                     }
                 }else{
                     view! {
-                        cx,
                         <label class="radio-container"><input type="radio" name="language" value="eng" checked /> "Angielski" <span class="checkmark"></span></label>
                         <label class="radio-container"><input type="radio" name="language" value="pl" /> "Polski"<span class="checkmark"></span></label>
                     }
@@ -99,12 +95,12 @@ pub fn ItemOffersFilter(cx: Scope) -> impl IntoView {
                 </option>
                 {move || {
                     if color_search() {
-                        view! { cx,
+                        view! {
                         <option selected=move || sort_by() == "color-distance" value="color-distance">
                             "Podobieństwo Koloru"
                         </option>
                     }}else{
-                        view! { cx, 
+                        view! { 
                         <option disabled selected=move || sort_by() == "color-distance" value="color-distance">
                             "Podobieństwo Koloru"
                         </option>
@@ -137,9 +133,9 @@ pub fn ItemOffersFilter(cx: Scope) -> impl IntoView {
                 <label class="switch">
                     {move || {
                         if color_search() {
-                            view! { cx, <input class="color-search-checkbox" type="checkbox" name="use_color_search" checked on:click=move |_| { set_color_search.update(|n| *n = !*n ); } /> }
+                            view! { <input class="color-search-checkbox" type="checkbox" name="use_color_search" checked on:click=move |_| { set_color_search.update(|n| *n = !*n ); } /> }
                         }else{
-                            view! { cx, <input class="color-search-checkbox" type="checkbox" name="use_color_search" on:click=move |_| { set_color_search.update(|n| *n = !*n ); } /> }
+                            view! { <input class="color-search-checkbox" type="checkbox" name="use_color_search" on:click=move |_| { set_color_search.update(|n| *n = !*n ); } /> }
                         }
                     }}
                     <span class="slider round"></span>

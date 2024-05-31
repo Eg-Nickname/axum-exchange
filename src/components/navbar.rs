@@ -5,10 +5,9 @@ use leptos_router::*;
 use crate::auth::User;
 
 #[component]
-pub fn NavBar(cx: Scope) -> impl IntoView {
-    let user = use_context::<Resource<(usize, usize, usize), Result<Option<User>, ServerFnError>>>(cx).expect("User resource shoud have been provided.");
+pub fn NavBar() -> impl IntoView {
+    let user = use_context::<Resource<(usize, usize, usize), Result<Option<User>, ServerFnError>>>().expect("User resource shoud have been provided.");
     view! {
-        cx,
         <nav>
             <ul class="nav-list">
                 <li><A href="/" class="nav-link">
@@ -32,31 +31,31 @@ pub fn NavBar(cx: Scope) -> impl IntoView {
                 </A></li>
 
                 <Transition
-                    fallback=move || view! {cx, <span>"Loading..."</span>}
+                    fallback=move || view! { <span>"Loading..."</span>}
                 >
                     {move || {
-                        user.read(cx).map(|user| match user {
+                        user().map(|user| match user {
                             // User error navbar view
-                            Err(_e) => view! {cx,
+                            Err(_e) => view! {
                                 <li>
                                     <A href="/login" class="login-link">"Zaloguj się"</A>
                                     // <span>" / "</span>
                                     <A href="/signup" class="signup-link">"Zarejestruj się"</A>
                                 </li>
                                 // <span>{format!("Login error: {}", e)}</span>
-                            }.into_view(cx),
+                            }.into_view(),
 
                             // User not logged in view
-                            Ok(None) => view! {cx,
+                            Ok(None) => view! {
                                 <li>
                                     <A href="/login" class="login-link">"Zaloguj się"</A>
                                     // <span>" / "</span>
                                     <A href="/signup" class="signup-link">"Zarejestruj się"</A>
                                 </li>
-                            }.into_view(cx),
+                            }.into_view(),
 
                             // User logged in view
-                            Ok(Some(user)) => view! {cx,
+                            Ok(Some(user)) => view! {
                                 <li class="account">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
                                     // <A href="/settings">"Ustawienia"</A>
@@ -74,7 +73,7 @@ pub fn NavBar(cx: Scope) -> impl IntoView {
                                         <div class="settings-dropdown-background"></div>
                                     </div>
                                 </li>
-                            }.into_view(cx)
+                            }.into_view()
                         })
                     }}
                 </Transition>

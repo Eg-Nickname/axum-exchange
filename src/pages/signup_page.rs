@@ -4,11 +4,9 @@ use crate::auth::Signup;
 
 #[component]
 pub fn SignupPage(
-    cx: Scope,
     action: Action<Signup, Result<(), ServerFnError>>,
 ) -> impl IntoView {
     view! {
-        cx,
         <ActionForm action=action>
             <h1>"Sign Up"</h1>
             <label>

@@ -149,8 +149,8 @@ pub struct Item {
 }
 
 #[server(GetItems, "/api")]
-pub async fn get_items(cx: Scope, query_data: ItemsQueryData) -> Result<Vec<Item>, ServerFnError> {
-    let pool = pool(cx)?;
+pub async fn get_items(query_data: ItemsQueryData) -> Result<Vec<Item>, ServerFnError> {
+    let pool = pool()?;
 
     // let page_offset = (query_data.page * 100) as i64;
     let valid_query_data = query_data.validate();

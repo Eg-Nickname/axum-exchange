@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_router::*;
 
 #[component]
-pub fn ResourcesListingsPage(cx: Scope) -> impl IntoView {
+pub fn ResourcesListingsPage() -> impl IntoView {
     // let query: Memo<ParamsMap> = use_query_map(cx);
     // let name = move || query().get("name").cloned().unwrap_or_default();
     // let number = move || query().get("number").cloned().unwrap_or_default();
@@ -10,7 +10,6 @@ pub fn ResourcesListingsPage(cx: Scope) -> impl IntoView {
 
 
     view! {
-        cx,
         <h2>"Resources page"</h2>
 
         // <table>
@@ -41,16 +40,15 @@ pub fn ResourcesListingsPage(cx: Scope) -> impl IntoView {
     }
 }
 #[component]
-pub fn ResourcesFilter(cx: Scope) -> impl IntoView {
+pub fn ResourcesFilter() -> impl IntoView {
 
-    let query = use_query_map(cx);
+    let query = use_query_map();
 
     let name = move || query().get("name").cloned().unwrap_or_default();
     let _number = move || query().get("groupby").cloned().unwrap_or_default();
     let select = move || query().get("sortorder").cloned().unwrap_or_default();
 
     view! {
-        cx,
         <h2>"Filter"</h2>
         // Item Name; Item ID; Item meta; Display Name Eng; Display Name Pl; Filename
         <Form method="GET" action="">
@@ -73,11 +71,11 @@ pub fn ResourcesFilter(cx: Scope) -> impl IntoView {
 }
 
 #[component]
-pub fn PageButtons(cx: Scope) -> impl IntoView {
-    let query = use_query_map(cx);
+pub fn PageButtons() -> impl IntoView {
+    let query = use_query_map();
     let querry_str = move || query().to_query_string();
 
-    let params = use_params_map(cx);
+    let params = use_params_map();
     let page = move || params().get("page").cloned();
 
     let parsed_page_num = move || { page().unwrap_or_default().parse::<u32>().unwrap_or_default() };
@@ -102,8 +100,6 @@ pub fn PageButtons(cx: Scope) -> impl IntoView {
     };
 
     view! {
-        cx,
-
         <div>
             <A href={prev_page_url}>"<"</A>
             <p>{parsed_page_num}</p>
